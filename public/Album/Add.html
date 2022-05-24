@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Album</title>
+    <meta name="description" content="New album can be added here">
+    <meta name="author" content="Shashi preetham ganta">
+</head>
+
+<body>
+
+    <h2>HTML Forms</h2>
+
+    <form>
+        <label for="fname">Album name:</label><br>
+        <input type="text" id="albumName" name="albumName" value="John"><br>
+        <label for="lname">Select artist:</label><br>
+        <select name="artists" id="artists">
+            <option value="artist1">Artist 1</option>
+            <option value="artist2">Artist 2</option>
+            <option value="artist3">Artist 3</option>
+            <option value="artist4">Artist 4</option>
+          </select>
+          <br>
+          <br>
+        <input type="submit" value="Submit" onclick="return onSubmit();">
+    </form>
+
+    <p>If you click the "Submit" button, the form-data will be sent to a page called "/action_page.php".</p>
+
+    <script>
+        function onSubmit() {
+            alert("Working");
+            return true;
+        }
+    </script>
+</body>
+
+</html>
