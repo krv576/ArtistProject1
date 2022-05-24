@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Album</title>
+    <meta name="description" content="New album can be added here">
+    <meta name="author" content="Shashi preetham ganta">
+</head>
+
+<body>
+    <div>
+        <h2>Add Album</h2>
+        <form onsubmit="onSubmit(event)" id="form">
+            <label for="fname">Album name</label><br>
+            <input type="text" id="name" name="name" value="">
+            <label id="errorname" style="display:none; color: red;"></label><br><br>
+
+            <label for="fartists">Select artist</label><br>
+            <select name="artists" id="artists">
+                <option value="artist1">Artist 1</option>
+                <option value="artist2">Artist 2</option>
+                <option value="artist3">Artist 3</option>
+                <option value="artist4">Artist 4</option>
+            </select>
+            <label id="errorartist" style="display:none; color: red;"></label><br><br>
+            <button>Submit</button>
+        </form>
+        <p>If you click the "Submit" button, new album will be created</p>
+    </div>
+
+    <script>
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorName = document.getElementById('errorname');
+            let errorArtist = document.getElementById('errorartist');
+            let areValid = true;
+            if (!e.name || e.name.value === '' || !e.name.value.length) {
+                errorName.style.display = 'inline';
+                errorName.innerText = ' Please enter album name';
+                areValid = false;
+            } else {
+                errorName.style.display = 'none';
+                errorName.innerText = '';
+            }
+            let artistValue = e.artists.options[e.artists.selectedIndex].value;
+            console.log("artistValue", artistValue);
+            if (!artistValue || artistValue === '' || !artistValue.length) {
+                errorArtist.style.display = 'inline';
+                errorArtist.innerText = ' Please select artist';
+                areValid = false;
+            } else {
+                errorArtist.style.display = 'none';
+                errorArtist.innerText = '';
+            }
+            if (!areValid) {
+                return true;
+            }
+            alert('New album "' + e.name.value + ' by (' + artistValue + ')" created successfully');
+            return true;
+        }
+    </script>
+</body>
+
+</html>
