@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Artist</title>
+    <meta name="description" content="New artist can be added here">
+    <meta name="author" content="Nagarjuna Reddy">
+    <style>
+        /* div {
+            color: white;
+            background: red;
+            padding: 15px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        } */
+    </style>
+</head>
+
+<body>
+    <div>
+        <h2>Add Artist</h2>
+        <form onsubmit="onSubmit(event)" id="form">
+            <label for="fname">Artist name</label><br>
+            <input type="text" id="name" name="name" value="">
+            <label id="errorname" style="display:none; color: red;"></label><br><br>
+            <button>Submit</button>
+        </form>
+        <p>If you click the "Submit" button, new artist will be created</p>
+    </div>
+
+
+    <script>
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorMessage = document.getElementById('errorname');
+            if (e.name.value === '' || !e.name.value.length) {
+                errorMessage.style.display = 'inline';
+                errorMessage.innerText = ' Please enter artist name';
+                return true;
+            }
+            errorMessage.style.display = 'none';
+            errorMessage.innerText = '';
+            alert('New artist "' + e.name.value + '" created successfully');
+            return true;
+        }
+    </script>
+</body>
+
+</html>
