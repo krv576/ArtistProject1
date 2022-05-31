@@ -15,7 +15,8 @@
     <div class="w3-light-blue">
         <!-- Navigation -->
         <nav class="w3-bar w3-dark-grey">
-            <a onclick="onArtistsClicked()" class="w3-button w3-bar-item">Home</a>
+            <a onclick="onArtistsClicked(false)" class="w3-button w3-bar-item">Home</a>
+            <a onclick="onArtistsClicked(true)" class="w3-button w3-bar-item">Top Artists</a>
             <a href="./Artist/Add.html" class="w3-button w3-bar-item">Add Artist</a>
             <a onclick="alert('Work in progress')" class="w3-button w3-bar-item">OLD Melodies</a>
         </nav>
@@ -23,7 +24,7 @@
         <!-- Project Description -->
         <section class="w3-container"
             style="padding-top: 3%; padding-left: 5%; padding-right: 5%; padding-bottom: 10%;">
-            <h2>Artists Available</h2>
+            <h2 id="#title">Artists</h2>
             <dl style="padding-left: 5%; padding-top: 3%;">
                 <ol id="listContainer">
                     <li class="w3-quarter">
@@ -69,8 +70,9 @@
         function init() {
             onArtistsClicked();
         }
-        function onArtistsClicked() {
-            loadArtists("listContainer");
+        function onArtistsClicked(onlyTopArtists) {
+            document.getElementById("#title").innerHTML = onlyTopArtists ? "Top artists" : "Artists"
+            loadArtists("listContainer", onlyTopArtists);
         }
     </script>
 </body>

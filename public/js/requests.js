@@ -1,8 +1,8 @@
 let artists = {};
-function loadArtists(containerId) {
+function loadArtists(containerId, onlyTopArtists) {
     let albumsListOL = document.getElementById(containerId);
-    albumsListOL.innerHTML = "<a>Loading artists...</a>";
-    execute('/api/artists/', 'GET', null, function (artistsArray) {
+    albumsListOL.innerHTML = `<a>Loading ${onlyTopArtists ? "top " : ""}artists...</a>`;
+    execute('/api/artists/' + (onlyTopArtists ? "top/" : ""), 'GET', null, function (artistsArray) {
         let innerHtmlSample = '<li onclick="onArtistSelected($artistId$)"  class="w3-half"><dt>$TopArtist$$ArtistName$</dt><br>$NewLine$</li>';
         let topArtistDisplayStr = '<a style="color:maroon">*</a>';
         let innerHtml = "";
