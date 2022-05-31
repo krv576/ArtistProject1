@@ -7,31 +7,32 @@
     <title>Add Artist</title>
     <meta name="description" content="New artist can be added here">
     <meta name="author" content="Nagarjuna Reddy">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
     <style>
-        /* div {
-            color: white;
-            background: red;
-            padding: 15px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            -ms-transform: translateX(-50%) translateY(-50%);
-            -webkit-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        } */
+        input[type=checkbox] {
+            transform: scale(2.0);
+        }
     </style>
 </head>
 
-<body>
-    <div>
-        <h2>Add Artist</h2>
-        <form onsubmit="onSubmit(event)" id="form">
-            <label for="fname">Artist name</label><br>
-            <input type="text" id="name" name="name" value="">
-            <label id="errorname" style="display:none; color: red;"></label><br><br>
-            <button>Submit</button>
-        </form>
-        <p>If you click the "Submit" button, new artist will be created</p>
+<body class="w3-light-blue">
+    <div style="margin: 5%;">
+        <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">
+            < Back to HOME</a>
+                <div style="margin-left: 5%; margin-top: 2%;">
+                    <h2>Add Artist</h2>
+                    <form onsubmit="onSubmit(event)" id="form" style="margin-left: 5%;">
+                        <label for="fname">Artist name</label><br>
+                        <input type="text" id="name" name="name" value="">
+                        <label id="errorname" style="display:none; color: red;"></label><br><br>
+
+                        <label for="ftopArtist">Top Artist:</label>
+                        <input type="checkbox" id="topArtist" name="topArtist" style="margin-left: 3%;"><br><br>
+                        <button name="submit">Submit</button>
+                    </form>
+                    <p style="margin-left: 5%;">If you click the "Submit" button, new artist will be created</p>
+                </div>
     </div>
 
 
@@ -48,7 +49,8 @@
             }
             errorMessage.style.display = 'none';
             errorMessage.innerText = '';
-            alert('New artist "' + e.name.value + '" created successfully');
+            // alert('New artist "' + e.name.value + `${e.topArtist.checked ? " (top artist)" : ""}` + '" created successfully');
+            addArtist(e.name.value, e.topArtist.checked, e.submit);
             return true;
         }
     </script>
