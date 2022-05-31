@@ -8,39 +8,26 @@
     <meta name="description" content="Albums, Artists, Songs">
     <meta name="author" content="Rishik Vardhan">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="./js/requests.js"></script>
 </head>
 
 <body>
     <div class="w3-light-blue">
         <!-- Navigation -->
         <nav class="w3-bar w3-dark-grey">
-            <a href="" class="w3-button w3-bar-item">Home</a>
-            <a href="./Album/Add.html" class="w3-button w3-bar-item">Add Album</a>
-            <a href="./Album/Search.html" class="w3-button w3-bar-item">Search Album</a>
+            <a onclick="onArtistsClicked()" class="w3-button w3-bar-item">Home</a>
             <a href="./Artist/Add.html" class="w3-button w3-bar-item">Add Artist</a>
+            <a onclick="alert('Work in progress')" class="w3-button w3-bar-item">OLD Melodies</a>
         </nav>
 
         <!-- Project Description -->
         <section class="w3-container"
             style="padding-top: 3%; padding-left: 5%; padding-right: 5%; padding-bottom: 10%;">
-            <h2>Albums List</h2>
+            <h2>Artists Available</h2>
             <dl style="padding-left: 5%; padding-top: 3%;">
-                <ol id="albumsListOL">
+                <ol id="listContainer">
                     <li class="w3-quarter">
-                        <dt>Album 1</dt>
-                        <dd>- Artist 1</dd><br>
-                    </li>
-                    <li class="w3-quarter">
-                        <dt>Album 2</dt>
-                        <dd>- Artist 1</dd><br>
-                    </li>
-                    <li class="w3-quarter">
-                        <dt>Album 3</dt>
-                        <dd>- Artist 2</dd><br>
-                    </li>
-                    <li class="w3-quarter">
-                        <dt>Album 4</dt>
-                        <dd>- Artist 3</dd><br><br>
+                        <dt>Artist name 1</dt>
                     </li>
                 </ol>
             </dl>
@@ -78,27 +65,12 @@
         </section>
     </div>
     <script>
-        addSampleAlbums(32);
-        function addSampleAlbums(noOfAlbumsToAdd = 64) {
-            let albumsListOL = document.getElementById("albumsListOL");
-            let innerHtmlSample = '<li class="w3-quarter"><dt>$AlbumName$</dt><dd>$ArtistName$</dd><br>$NewLine$</li>';
-            let innerHtml = "";
-            for (let index = 0; index < noOfAlbumsToAdd; index++) {
-                let artistIndex = index;
-                if ((artistIndex + 1) > 6) {
-                    artistIndex = index % 6;
-                }
-                let newLine = "";
-                if ((index + 1) % 4 == 0) {
-                    newLine = "<br>";
-                }
-                const element = innerHtmlSample.replace("$AlbumName$", "Album" + (index + 1))
-                    .replace("$ArtistName$", "- Artist " + (artistIndex + 1))
-                    .replace("$NewLine$", newLine);
-                innerHtml += element;
-                artistIndex++;
-            }
-            albumsListOL.innerHTML = innerHtml;
+        window.onload = init;
+        function init() {
+            onArtistsClicked();
+        }
+        function onArtistsClicked() {
+            loadArtists("listContainer");
         }
     </script>
 </body>
