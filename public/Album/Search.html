@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search Album</title>
+    <meta name="description" content="Search required Album here">
+    <meta name="author" content="Sahithi kommineni">
+</head>
+
+<body>
+    <div>
+        <h2>Search Album</h2>
+        <form onsubmit="onSubmit(event)" id="form">
+            <label for="fSearchtext">Search album here</label><br>
+            <input type="text" id="searchtext" name="searchtext" value="">
+            <label id="errorsearchtext" style="display:none; color: red;"></label><br><br>
+            <button>Search</button>
+        </form>
+        <p>Click "Search" button to start search album</p>
+    </div>
+
+
+    <script>
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorMessage = document.getElementById('errorsearchtext');
+            if (e.searchtext.value === '' || !e.searchtext.value.length) {
+                errorMessage.style.display = 'inline';
+                errorMessage.innerText = ' Please enter album name to start search';
+                return true;
+            }
+            errorMessage.style.display = 'none';
+            errorMessage.innerText = '';
+            alert('Album "' + e.searchtext.value + '" found successfully');
+            return true;
+        }
+    </script>
+</body>
+
+</html>

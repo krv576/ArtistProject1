@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <meta name="description" content="Albums, Artists, Songs">
+    <meta name="author" content="Rishik Vardhan">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="./js/requests.js"></script>
+</head>
+
+<body>
+    <div class="w3-light-blue">
+        <!-- Navigation -->
+        <nav class="w3-bar w3-dark-grey">
+            <a onclick="onArtistsClicked(false)" class="w3-button w3-bar-item">Home</a>
+            <a onclick="onArtistsClicked(true)" class="w3-button w3-bar-item">Top Artists</a>
+            <a href="./Artist/Add.html" class="w3-button w3-bar-item">Add Artist</a>
+            <a onclick="alert('Work in progress')" class="w3-button w3-bar-item">OLD Melodies</a>
+        </nav>
+
+        <!-- Project Description -->
+        <section class="w3-container"
+            style="padding-top: 3%; padding-left: 5%; padding-right: 5%; padding-bottom: 10%;">
+            <h2 id="#title">Artists</h2>
+            <dl style="padding-left: 5%; padding-top: 3%;">
+                <ol id="listContainer">
+                    <li class="w3-quarter">
+                        <dt>Artist name 1</dt>
+                    </li>
+                </ol>
+            </dl>
+        </section>
+
+        <section class="w3-container w3-center w3-content w3-light-grey" style="max-width:600px;">
+            <h2 class="w3-wide">Artist Project</h2>
+            <p class="w3-opacity"><i>Our project description will be placed here. Work In Progress</i></p><br><br><br>
+        </section>
+
+        <!-- Band Members -->
+        <section class="w3-row-padding w3-center w3-light-grey">
+            <h2 class="w3-wide">Our Team</h2>
+            <article class="w3-quarter">
+                <p>Rishik Vardhan</p>
+                <!-- <img src="img_bandmember.jpg" alt="Random Name" style="width:100%"> -->
+                <p>Member</p>
+            </article>
+            <article class="w3-quarter">
+                <p>Shashi preetham ganta</p>
+                <p>Member</p>
+            </article>
+            <article class="w3-quarter">
+                <p>Sahithi kommineni</p>
+                <p>Member</p>
+            </article>
+            <article class="w3-quarter">
+                <p>Nagarjuna Reddy</p>
+                <p>Member</p>
+            </article>
+            <article>
+                <p>Rishwant</p>
+                <p>Member</p>
+            </article>
+        </section>
+    </div>
+    <script>
+        window.onload = init;
+        function init() {
+            onArtistsClicked();
+        }
+        function onArtistsClicked(onlyTopArtists) {
+            document.getElementById("#title").innerHTML = onlyTopArtists ? "Top artists" : "Artists"
+            loadArtists("listContainer", onlyTopArtists);
+        }
+    </script>
+</body>
+
+</html>
