@@ -1,3 +1,18 @@
+function addArtist(name, topArtist, submitBtn) {
+    submitBtn.innerHTML = "Creating artist, Please wait..."
+    submitBtn.disabled = true;
+    execute('/api/artists/', 'POST', { name, top: topArtist ? topArtist : false }, function (newArtist) {
+        submitBtn.innerHTML = "Done";
+        alert(newArtist.name + " successfully created.")
+        history.back();
+    }, function (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Submit"
+        console.log("err", err);
+        alert(`${err && err !== "Error" ? err : "Error occurred. Please try again"}`);
+    });
+}
+
 let artists = {};
 function loadArtists(containerId, onlyTopArtists) {
     let albumsListOL = document.getElementById(containerId);
@@ -42,7 +57,17 @@ function execute(urlPath, requestMethod, requestBody, onSuccess, onError) {
     requestAPI(url, requestMethod, requestBody, function (err, response) {
         if (err) {
             if (onError) {
-                onError(err);
+                try {
+                    response = JSON.parse(response);
+                    if (response && response.message) {
+                        onError(response.message);
+                    } else {
+                        onError(err);
+                    }
+                } catch (e2) {
+                    console.log(e2);
+                    onError(err);
+                }
             } else {
                 if (response) {
                     console.log("error res", JSON.stringify(response));
