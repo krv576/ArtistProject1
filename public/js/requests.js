@@ -18,7 +18,7 @@ function loadArtists(containerId, onlyTopArtists) {
     let albumsListOL = document.getElementById(containerId);
     albumsListOL.innerHTML = `<a>Loading ${onlyTopArtists ? "top " : ""}artists...</a>`;
     execute('/api/artists/' + (onlyTopArtists ? "top/" : ""), 'GET', null, function (artistsArray) {
-        let innerHtmlSample = '<li onclick="onArtistSelected($artistId$)"  class="w3-half"><dt>$TopArtist$$ArtistName$</dt><br>$NewLine$</li>';
+        let innerHtmlSample = '<li onclick="onArtistSelected($artistId$)" style="cursor:pointer;"  class="w3-half"><dt>$TopArtist$$ArtistName$</dt><br>$NewLine$</li>';
         let topArtistDisplayStr = '<a style="color:maroon">*</a>';
         let innerHtml = "";
         artists = {};
@@ -30,9 +30,9 @@ function loadArtists(containerId, onlyTopArtists) {
                 artistIndex = index % 6;
             }
             let newLine = "";
-            if ((index + 1) % 4 == 0) {
+            /* if ((index + 1) % 2 == 0) {
                 newLine = "<br>";
-            }
+            } */
             const element = innerHtmlSample.replace("$ArtistName$", artist.name)
                 .replace("$TopArtist$", artist.top ? topArtistDisplayStr : "")
                 .replace("$artistId$", artist.id)
