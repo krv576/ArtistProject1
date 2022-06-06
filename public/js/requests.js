@@ -40,6 +40,9 @@ function loadArtists(containerId, onlyTopArtists) {
             innerHtml += element;
             artistIndex++;
         }
+        if (artistsArray.length == 0) {
+            innerHtml = "No artists found"
+        }
         albumsListOL.innerHTML = innerHtml;
     }, function (err) {
         albumsListOL.innerHTML = `<a style="color:red">${err && err !== "Error" ? err : "Error occurred. Please try again"}</a>`;
