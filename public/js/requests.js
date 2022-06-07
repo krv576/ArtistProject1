@@ -116,6 +116,14 @@
         });
     }
 
+    function deleteTrack(trackId, callback) {
+        execute('/api/tracks/' + trackId, 'DELETE', null, function (res) {
+            callback({ error: false, data: res });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+
     function addUpdateTrack(update, name, length, fileName, oldMelody, albumId, artistId, genreId, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} track, Please wait...`
         submitBtn.disabled = true;
@@ -138,7 +146,7 @@
         execute('/api/tracks/' + (albumId ? "album/" + albumId : ""), 'GET', null, function (tracksArray) {
             let innerHtmlSample = '<li onclick="onTrackSelected($trackId$)" style="cursor:pointer;" ><dt>$TrackName$ ($TrackLength$)</dt>$NewLine$$Buttons$</li><br>';
             let oldMelodyDisplayStr = '<a style="color:maroon">*</a>';
-            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><p>$descriptionP$</p><button id="$updateTrack$" onclick="location.href=`../Track/Update.html?id=uTrackId`">Update</button><a> </a><button id="$deleteTrack$" onclick="onDeleteTrackSelected($dTrackId$)">Delete</button><br><br></div>'
+            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><p>$descriptionP$</p><button id="$updateTrack$" onclick="location.href=`../Track/Update.html?id=uTrackId`">Update</button><a> </a><button id="$deleteTrack$" onclick="onDeleteTrackSelected($dTrackId$, $dAlbumId$, $dAlbumName$)">Delete</button><br><br></div>'
             let innerHtml = "";
             tracks = {};
             for (let index = 0; index < tracksArray.length; index++) {
@@ -152,13 +160,15 @@
                 /* if ((index + 1) % 2 == 0) {
                     newLine = "<br>";
                 } */
-                let descriptionP = `Duration: ${track.length}<br>File name: ${track.fileName}${track.oldMelody ? "<br>This is an old melody song": "<br>"}<br>`
+                let descriptionP = `Duration: ${track.length}<br>File name: ${track.fileName}${track.oldMelody ? "<br>This is an old melody song" : "<br>"}<br>`
                 const element = innerHtmlSample.replace("$TrackName$", track.name)
                     .replace("$TrackLength$", track.length)
                     .replace("$trackId$", track.id)
                     .replace("$Buttons$", buttonHtml)
                     .replace("uTrackId", track.id)
                     .replace("$dTrackId$", track.id)
+                    .replace("$dAlbumId$", albumId)
+                    .replace("$dAlbumName$", "'" + albumName + "'")
                     .replace("$descriptionP$", descriptionP)
                     .replace("$updateTrack$", 'updateTrack' + track.id)
                     .replace("$deleteTrack$", 'deleteTrack' + track.id)
@@ -181,6 +191,22 @@
         location.href = '../Track/View.html?id=' + trackId; */
         let buttonsDivEle = document.getElementById("buttonsDiv" + trackId);
         buttonsDivEle.style.display = buttonsDivEle.style.display === "none" ? "block" : "none";
+    }
+
+    function onDeleteTrackSelected(trackId, albumId, albumName) {
+        if (confirm('Track will be deleted permanantly. Are you sure ..?')) {
+            deleteTrack(trackId, function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    // history.back();
+                } else {
+                    alert(res.data.message);
+                    // history.back();
+                    loadTracks("listContainer", albumId, albumName);
+                }
+            })
+        }
     }
 }
 
