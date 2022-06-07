@@ -1,5 +1,31 @@
+//Genre functions
+{
+    function getGenres(callback) {
+        execute('/api/genres/', 'GET', null, function (genresArray) {
+            callback({ error: false, data: genresArray });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+}
+
 //Album functions
 {
+    function addUpdateAlbum(update, name, year, artistId, genreId, submitBtn) {
+        submitBtn.innerHTML = `${update ? "Updating" : "Creating"} album, Please wait...`
+        submitBtn.disabled = true;
+        execute('/api/albums/'+(update ? update : ""), `${update ? "PUT" : "POST"}`, { name, year, artistId, genreId }, function (newAlbum) {
+            submitBtn.innerHTML = "Done";
+            alert(name + ` successfully ${update ? "Updated" : "Created"}.`)
+            history.back();
+        }, function (err) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "Submit"
+            console.log("err", err);
+            alert(`${err && err !== "Error" ? err : "Error occurred. Please try again"}`);
+        });
+    }
+
     let albums = {};
     function loadAlbums(containerId, artistId, artistName) {
         let albumsListOL = document.getElementById(containerId);
