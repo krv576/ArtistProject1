@@ -50,7 +50,7 @@
             errorMessage.style.display = 'none';
             errorMessage.innerText = '';
             // alert('New artist "' + e.name.value + `${e.topArtist.checked ? " (top artist)" : ""}` + '" created successfully');
-            addArtist(e.name.value, e.topArtist.checked, e.submit);
+            addUpdateArtist(false, e.name.value, e.topArtist.checked, e.submit);
             return true;
         }
     </script>
