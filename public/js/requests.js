@@ -140,13 +140,13 @@
     }
 
     let tracks = {};
-    function loadTracks(containerId, albumId, albumName) {
+    function loadTracks(containerId, albumId, albumName, onlyOldMelodies) {
         let listOL = document.getElementById(containerId);
-        listOL.innerHTML = `<a>Loading ${albumName} tracks...</a>`;
-        execute('/api/tracks/' + (albumId ? "album/" + albumId : ""), 'GET', null, function (tracksArray) {
+        listOL.innerHTML = `<a>Loading ${onlyOldMelodies ? "old melody" : albumName ? albumName : ""} tracks...</a>`;
+        execute('/api/tracks/' + (onlyOldMelodies ? "oldMelodies" : albumId ? "album/" + albumId : ""), 'GET', null, function (tracksArray) {
             let innerHtmlSample = '<li onclick="onTrackSelected($trackId$)" style="cursor:pointer;" ><dt>$TrackName$ ($TrackLength$)</dt>$NewLine$$Buttons$</li><br>';
             let oldMelodyDisplayStr = '<a style="color:maroon">*</a>';
-            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><p>$descriptionP$</p><button id="$updateTrack$" onclick="location.href=`../Track/Update.html?id=uTrackId`">Update</button><a> </a><button id="$deleteTrack$" onclick="onDeleteTrackSelected($dTrackId$, $dAlbumId$, $dAlbumName$)">Delete</button><br><br></div>'
+            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><p>$descriptionP$</p><button id="$updateTrack$" onclick="location.href=`' + (onlyOldMelodies ? "." : "..") + '/Track/Update.html?id=uTrackId`">Update</button><a> </a><button id="$deleteTrack$" onclick="onDeleteTrackSelected($dTrackId$, $dAlbumId$, $dAlbumName$, $dOnlyOldMelodies$)">Delete</button><br><br></div>'
             let innerHtml = "";
             tracks = {};
             for (let index = 0; index < tracksArray.length; index++) {
@@ -168,6 +168,7 @@
                     .replace("uTrackId", track.id)
                     .replace("$dTrackId$", track.id)
                     .replace("$dAlbumId$", albumId)
+                    .replace("$dOnlyOldMelodies$", onlyOldMelodies)
                     .replace("$dAlbumName$", "'" + albumName + "'")
                     .replace("$descriptionP$", descriptionP)
                     .replace("$updateTrack$", 'updateTrack' + track.id)
@@ -193,7 +194,7 @@
         buttonsDivEle.style.display = buttonsDivEle.style.display === "none" ? "block" : "none";
     }
 
-    function onDeleteTrackSelected(trackId, albumId, albumName) {
+    function onDeleteTrackSelected(trackId, albumId, albumName, onlyOldMelodies) {
         if (confirm('Track will be deleted permanantly. Are you sure ..?')) {
             deleteTrack(trackId, function (res) {
                 console.log(res);
@@ -203,7 +204,7 @@
                 } else {
                     alert(res.data.message);
                     // history.back();
-                    loadTracks("listContainer", albumId, albumName);
+                    loadTracks("listContainer", albumId, albumName, onlyOldMelodies);
                 }
             })
         }

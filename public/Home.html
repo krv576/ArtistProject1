@@ -21,7 +21,7 @@
             <a href="./Artist/Search.html"  class="w3-button w3-bar-item">Search Artist</a>
             <a href="./Album/Index.html"  class="w3-button w3-bar-item">Albums</a>
             <a href="./Genre/Index.html"  class="w3-button w3-bar-item">Genres</a>
-            <a onclick="alert('Work in progress')" class="w3-button w3-bar-item">OLD Melodies</a>
+            <a onclick="onOldMelodiesClicked()" class="w3-button w3-bar-item">OLD Melodies</a>
         </nav>
 
         <!-- Project Description -->
@@ -76,6 +76,10 @@
         function onArtistsClicked(onlyTopArtists) {
             document.getElementById("#title").innerHTML = onlyTopArtists ? "Top artists" : "Artists"
             loadArtists("listContainer", onlyTopArtists);
+        }
+        function onOldMelodiesClicked() {
+            document.getElementById("#title").innerHTML = "Old melodies"
+            loadTracks("listContainer", null, null, true);
         }
     </script>
 </body>
