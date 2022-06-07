@@ -14,7 +14,7 @@
     function addUpdateAlbum(update, name, year, artistId, genreId, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} album, Please wait...`
         submitBtn.disabled = true;
-        execute('/api/albums/'+(update ? update : ""), `${update ? "PUT" : "POST"}`, { name, year, artistId, genreId }, function (newAlbum) {
+        execute('/api/albums/' + (update ? update : ""), `${update ? "PUT" : "POST"}`, { name, year, artistId, genreId }, function (newAlbum) {
             submitBtn.innerHTML = "Done";
             alert(name + ` successfully ${update ? "Updated" : "Created"}.`)
             history.back();
@@ -72,6 +72,16 @@
 
 //Artist functions
 {
+    function searchArtists(queryStr, callback) {
+        if (!queryStr) {
+            return callback({ error: false, data: [] });
+        }
+        execute('/api/artists/' + queryStr, 'GET', null, function (artistsArray) {
+            callback({ error: false, data: artistsArray });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
     function getArtists(callback) {
         execute('/api/artists/', 'GET', null, function (artistsArray) {
             callback({ error: false, data: artistsArray });
@@ -96,7 +106,7 @@
     function addUpdateArtist(update, name, topArtist, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} artist, Please wait...`
         submitBtn.disabled = true;
-        execute('/api/artists/'+(update ? update : ""), `${update ? "PUT" : "POST"}`, { name, top: topArtist ? topArtist : false }, function (newArtist) {
+        execute('/api/artists/' + (update ? update : ""), `${update ? "PUT" : "POST"}`, { name, top: topArtist ? topArtist : false }, function (newArtist) {
             submitBtn.innerHTML = "Done";
             alert(name + ` successfully ${update ? "Updated" : "Created"}.`)
             history.back();
