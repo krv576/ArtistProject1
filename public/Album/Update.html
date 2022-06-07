@@ -27,6 +27,10 @@
                         <input type="text" id="name" name="name" value="" style="min-width: 17%; min-height: 40px;">
                         <label id="errorname" style="display:none; color: red;"></label><br><br>
 
+                        <label for="fyear">Album Year</label><br>
+                        <input type="text" id="year" name="year" value="" style="min-width: 17%; min-height: 40px;">
+                        <label id="erroryear" style="display:none; color: red;"></label><br><br>
+
                         <label for="fartists">Select artist</label><br>
                         <select name="artists" id="artists" style="min-width: 17%; min-height: 40px;">
                             <option value="artist0">Loading...</option>
@@ -128,6 +132,14 @@
             } else {
                 errorName.style.display = 'none';
                 errorName.innerText = '';
+            }
+            if (!e.year || e.year.value === '' || !e.year.value.length) {
+                errorYear.style.display = 'inline';
+                errorYear.innerText = ' Please enter album year';
+                areValid = false;
+            } else {
+                errorYear.style.display = 'none';
+                errorYear.innerText = '';
             }
             let artistValue = e.artists.options[e.artists.selectedIndex].value;
             console.log("artistValue", artistValue);
