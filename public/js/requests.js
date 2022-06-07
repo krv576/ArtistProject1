@@ -9,8 +9,98 @@
     }
 }
 
+//Track functions
+{
+    function addUpdateTrack(update, name, length, fileName, oldMelody, albumId, artistId, genreId, submitBtn) {
+        submitBtn.innerHTML = `${update ? "Updating" : "Creating"} track, Please wait...`
+        submitBtn.disabled = true;
+        execute('/api/albums/' + (update ? update : ""), `${update ? "PUT" : "POST"}`, { name, length, fileName, oldMelody, albumId, artistId, genreId }, function (newTrack) {
+            submitBtn.innerHTML = "Done";
+            alert(name + ` successfully ${update ? "Updated" : "Created"}.`)
+            history.back();
+        }, function (err) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "Submit"
+            console.log("err", err);
+            alert(`${err && err !== "Error" ? err : "Error occurred. Please try again"}`);
+        });
+    }
+
+    let tracks = {};
+    function loadTracks(containerId, albumId, albumName) {
+        let listOL = document.getElementById(containerId);
+        listOL.innerHTML = `<a>Loading ${albumName} tracks...</a>`;
+        execute('/api/tracks/' + (albumId ? "album/" + albumId : ""), 'GET', null, function (tracksArray) {
+            let innerHtmlSample = '<li onclick="onTrackSelected($trackId$)" style="cursor:pointer;"  class="w3-half"><dt>$TrackName$ ($TrackLength$)</dt><br>$NewLine$</li>';
+            let oldMelodyDisplayStr = '<a style="color:maroon">*</a>';
+            let innerHtml = "";
+            tracks = {};
+            for (let index = 0; index < tracksArray.length; index++) {
+                let track = tracksArray[index];
+                tracks[track.id] = track;
+                let trackIndex = index;
+                if ((trackIndex + 1) > 6) {
+                    trackIndex = index % 6;
+                }
+                let newLine = "";
+                /* if ((index + 1) % 2 == 0) {
+                    newLine = "<br>";
+                } */
+                const element = innerHtmlSample.replace("$TrackName$", track.name)
+                    .replace("$TrackLength$", track.length)
+                    .replace("$trackId$", track.id)
+                    .replace("$NewLine$", newLine);
+                innerHtml += element;
+                trackIndex++;
+            }
+            if (tracksArray.length == 0) {
+                innerHtml = `No tracks are available`;
+            }
+            listOL.innerHTML = innerHtml;
+        }, function (err) {
+            listOL.innerHTML = `<a style="color:red">${err && err !== "Error" ? err : "Error occurred. Please try again"}</a>`;
+        });
+    }
+
+    function onTrackSelected(trackId) {
+        let track = tracks[trackId];
+        location.href = '../Track/View.html?id=' + trackId;
+    }
+}
+
 //Album functions
 {
+    function searchAlbums(queryStr, callback) {
+        if (!queryStr) {
+            return callback({ error: false, data: [] });
+        }
+        execute('/api/albums/' + queryStr, 'GET', null, function (albumssArray) {
+            callback({ error: false, data: albumssArray });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+    function getAlbums(callback) {
+        execute('/api/albums/', 'GET', null, function (albumssArray) {
+            callback({ error: false, data: albumssArray });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+    function getAlbum(albumId, callback) {
+        execute('/api/albums/' + albumId, 'GET', null, function (album) {
+            callback({ error: false, data: album });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+    function deleteAlbum(albumId, callback) {
+        execute('/api/albums/' + albumId, 'DELETE', null, function (res) {
+            callback({ error: false, data: res });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
     function addUpdateAlbum(update, name, year, artistId, genreId, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} album, Please wait...`
         submitBtn.disabled = true;

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Album Tracks</title>
+    <meta name="description" content="Albums, Artists, Tracks">
+    <meta name="author" content="Sahithi Kommineni">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+</head>
+
+<body>
+
+    <body class="w3-light-blue">
+        <div>
+            <!-- Navigation -->
+            <nav class="w3-bar w3-dark-grey">
+                <a href="javascript:history.back()" class="w3-button w3-bar-item">◄ Back</a>
+                <a onclick="onUpdateAlbumClicked()" class="w3-button w3-bar-item">Update Album</a>
+                <a onclick="onDeleteAlbumClicked()" class="w3-button w3-bar-item">Delete Album</a>
+                <a href="../Track/Add.html" class="w3-button w3-bar-item">Add Track</a>
+                <a href="../Track/Search.html" class="w3-button w3-bar-item">Search Track</a>
+            </nav>
+
+            <!-- Project Description -->
+            <section class="w3-container"
+                style="padding-top: 3%; padding-left: 5%; padding-right: 5%; padding-bottom: 10%;">
+                <h2 id="#title">Album Name</h2>
+                <dl style="padding-left: 5%; padding-top: 3%;">
+                    <ol id="listContainer">
+                        <li class="w3-quarter">
+                            <dt>Loading...</dt>
+                        </li>
+                    </ol>
+                </dl>
+            </section>
+        </div>
+        <script>
+            window.onload = init;
+            let album;
+            function init(callback) {
+                //loadGenres();
+                getAlbum(getAllUrlParams().id, function (res) {
+                    console.log(res);
+                    if (res.error) {
+                        alert(res.data);
+                        history.back();
+                    } else {
+                        album = res.data;
+                        document.title = album.name + ` (${album.year})`
+                        document.getElementById("#title").innerHTML = album.name + ` (${album.year})`
+                        loadTracks("listContainer", album.id, album.name);
+                        if (callback && typeof callback === "function") {
+                            callback();
+                        }
+                    }
+                })
+            }
+            function onUpdateAlbumClicked() {
+                if (!album) {
+                    init(function () {
+                        onUpdateAlbumClicked();
+                    })
+                } else {
+                    location.href = './Update.html?id=' + album.id;
+                }
+            }
+            function onDeleteAlbumClicked() {
+                if (!album) {
+                    init(function () {
+                        onDeleteAlbumClicked();
+                    })
+                } else {
+                    if (confirm('Album will be deleted permanantly. Are you sure ..?')) {
+                        deleteAlbum(getAllUrlParams().id, function (res) {
+                            console.log(res);
+                            if (res.error) {
+                                alert(res.data);
+                                history.back();
+                            } else {
+                                alert(res.data.message);
+                                history.back();
+                            }
+                        })
+                    }
+                }
+            }
+        </script>
+    </body>
+
+</html>
