@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Artist Albums</title>
+    <meta name="description" content="Albums, Artists, Songs">
+    <meta name="author" content="Rishik Vardhan">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+</head>
+
+<body>
+    <div class="w3-light-blue">
+        <!-- Navigation -->
+        <nav class="w3-bar w3-dark-grey">
+            <a href="javascript:history.back()" class="w3-button w3-bar-item">
+                < Back to Home</a>
+                    <a onclick="onUpdateArtistClicked()" class="w3-button w3-bar-item">Update Artist</a>
+                    <a onclick="onDeleteArtistClicked()" class="w3-button w3-bar-item">Delete Artist</a>
+                    <a href="./Album/Add.html" class="w3-button w3-bar-item">Add Album</a>
+                    <a href="./Album/Search.html" class="w3-button w3-bar-item">Search Album</a>
+        </nav>
+
+        <!-- Project Description -->
+        <section class="w3-container"
+            style="padding-top: 3%; padding-left: 5%; padding-right: 5%; padding-bottom: 10%;">
+            <h2 id="#title">Artist Name</h2>
+            <dl style="padding-left: 5%; padding-top: 3%;">
+                <ol id="listContainer">
+                    <li class="w3-quarter">
+                        <dt>Loading...</dt>
+                    </li>
+                </ol>
+            </dl>
+        </section>
+    </div>
+    <script>
+        window.onload = init;
+        let artist;
+        function init(callback) {
+            //loadGenres();
+            getArtist(getAllUrlParams().id, function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    artist = res.data;
+                    document.title = artist.name
+                    document.getElementById("#title").innerHTML = artist.name
+                    loadAlbums("listContainer", artist.id, artist.name);
+                    if (callback && typeof callback === "function") {
+                        callback();
+                    }
+                }
+            })
+        }
+        function onUpdateArtistClicked() {
+            if (!artist) {
+                init(function () {
+                    onUpdateArtistClicked();
+                })
+            } else {
+                location.href = './Update.html?id=' + artist.id;
+            }
+        }
+        function onDeleteArtistClicked() {
+            if (!artist) {
+                init(function () {
+                    onDeleteArtistClicked();
+                })
+            } else {
+                deleteArtist(getAllUrlParams().id, function (res) {
+                    console.log(res);
+                    if (res.error) {
+                        alert(res.data);
+                        history.back();
+                    } else {
+                        alert(res.data.message);
+                        history.back();
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>

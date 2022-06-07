@@ -1,3 +1,49 @@
+//Album functions
+{
+    let albums = {};
+    function loadAlbums(containerId, artistId, artistName) {
+        let albumsListOL = document.getElementById(containerId);
+        albumsListOL.innerHTML = `<a>Loading ${artistName} albums...</a>`;
+        execute('/api/albums/' + (artistId ? "artist/" + artistId : ""), 'GET', null, function (albumsArray) {
+            let innerHtmlSample = '<li onclick="onAlbumSelected($albumId$)" style="cursor:pointer;"  class="w3-half"><dt>$AlbumName$ ($AlbumYear$)</dt><br>$NewLine$</li>';
+            let topArtistDisplayStr = '<a style="color:maroon">*</a>';
+            let innerHtml = "";
+            albums = {};
+            for (let index = 0; index < albumsArray.length; index++) {
+                let album = albumsArray[index];
+                albums[album.id] = album;
+                let albumIndex = index;
+                if ((albumIndex + 1) > 6) {
+                    albumIndex = index % 6;
+                }
+                let newLine = "";
+                /* if ((index + 1) % 2 == 0) {
+                    newLine = "<br>";
+                } */
+                const element = innerHtmlSample.replace("$AlbumName$", album.name)
+                    .replace("$AlbumYear$", album.year)
+                    .replace("$albumId$", album.id)
+                    .replace("$NewLine$", newLine);
+                innerHtml += element;
+                albumIndex++;
+            }
+            if (albumsArray.length == 0) {
+                innerHtml = `Albums not found`;
+            }
+            albumsListOL.innerHTML = innerHtml;
+        }, function (err) {
+            albumsListOL.innerHTML = `<a style="color:red">${err && err !== "Error" ? err : "Error occurred. Please try again"}</a>`;
+        });
+    }
+
+    function onAlbumSelected(albumId) {
+        let album = albums[albumId];
+        /* console.log("albums", albumId, typeof albumId, albumId);
+        alert(album.name + " selected"); */
+        location.href = '../album/view.html?id=' + albumId;
+    }
+}
+
 //Artist functions
 {
     function getArtists(callback) {
