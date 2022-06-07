@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Add Track</title>
-    <meta name="description" content="New track can be added here">
-    <meta name="author" content="Sahithi Kommineni">
+    <title>Update Track</title>
+    <meta name="description" content="Track can be update here">
+    <meta name="author" content="Rishik Vardhan kolipaka">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
     <script src="../js/requests.js"></script>
     <style>
@@ -20,7 +20,7 @@
     <div style="margin: 5%;">
         <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">◄ Back</a>
         <div style="margin-left: 5%; margin-top: 2%;">
-            <h2>Add Track</h2>
+            <h2>Update Track</h2>
             <form onsubmit="onSubmit(event)" id="form" style="margin-left: 5%;">
                 <label for="fname">Track name</label><br>
                 <input type="text" id="name" name="name" value="" style="min-width: 17%; min-height: 40px;">
@@ -57,14 +57,30 @@
                 <label id="errorgenre" style="display:none; color: red;"></label><br><br>
                 <button name="submit">Submit</button>
             </form>
-            <p style="margin-left: 5%;">If you click the "Submit" button, new track will be created</p>
+            <p style="margin-left: 5%;">If you click the "Submit" button, track will be updated</p>
         </div>
     </div>
 
 
     <script>
         window.onload = init;
+        let track;
         function init(callback) {
+            getTrack(getAllUrlParams().id, function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    track = res.data;
+                    let title =  'Update (' + track.name + ')';
+                    document.title = title
+                    document.getElementById("name").value = track.name;
+                    document.getElementById("fileLength").value = track.length;
+                    document.getElementById("fileName").value = track.fileName;
+                    document.getElementById("oldMelody").checked = track.oldMelody;
+                }
+            })
             getAlbums(function (res) {
                 console.log(res);
                 if (res.error) {
@@ -101,7 +117,11 @@
             let innerHTML = '';
             for (let index = 0; index < albums.length; index++) {
                 const album = albums[index];
-                let optionTag = `<option value="${album.id}">${album.name} (${album.year})</option>`
+                let associatedAlbum = false; 
+                if (track.albumId === album.id) {
+                    associatedAlbum = true; 
+                }
+                let optionTag = `<option  ${associatedAlbum ? "selected " : ""}value="${album.id}">${album.name} (${album.year})</option>`
                 innerHTML += optionTag;
             }
             document.getElementById("albums").innerHTML = innerHTML;
@@ -111,7 +131,11 @@
             let innerHTML = '';
             for (let index = 0; index < artists.length; index++) {
                 const artist = artists[index];
-                let optionTag = `<option value="${artist.id}">${artist.name}</option>`
+                let associatedArtist = false; 
+                if (track.artistId === artist.id) {
+                    associatedArtist = true; 
+                }
+                let optionTag = `<option ${associatedArtist ? "selected " : ""}value="${artist.id}">${artist.name}</option>`
                 innerHTML += optionTag;
             }
             document.getElementById("artists").innerHTML = innerHTML;
@@ -121,7 +145,11 @@
             let innerHTML = '';
             for (let index = 0; index < genres.length; index++) {
                 const genre = genres[index];
-                let optionTag = `<option value="${genre.id}">${genre.name}</option>`
+                let associatedGenre = false; 
+                if (track.genreId === genre.id) {
+                    associatedGenre = true; 
+                }
+                let optionTag = `<option  ${associatedGenre ? "selected " : ""}value="${genre.id}">${genre.name}</option>`
                 innerHTML += optionTag;
             }
             document.getElementById("genres").innerHTML = innerHTML;
@@ -186,7 +214,7 @@
             if (!areValid) {
                 return true;
             }
-            addUpdateTrack(false, e.name.value, e.fileLength.value, e.fileName.value, e.oldMelody.checked, albumValue, artistValue, genreValue, e.submit);
+            addUpdateTrack(track.id, e.name.value, e.fileLength.value, e.fileName.value, e.oldMelody.checked, albumValue, artistValue, genreValue, e.submit);
             return true;
         }
     </script>
