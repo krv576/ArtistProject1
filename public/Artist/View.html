@@ -73,16 +73,18 @@
                         onDeleteArtistClicked();
                     })
                 } else {
-                    deleteArtist(getAllUrlParams().id, function (res) {
-                        console.log(res);
-                        if (res.error) {
-                            alert(res.data);
-                            history.back();
-                        } else {
-                            alert(res.data.message);
-                            history.back();
-                        }
-                    })
+                    if (confirm('Artist will be deleted permanantly. Are you sure ..?')) {
+                        deleteArtist(getAllUrlParams().id, function (res) {
+                            console.log(res);
+                            if (res.error) {
+                                alert(res.data);
+                                history.back();
+                            } else {
+                                alert(res.data.message);
+                                history.back();
+                            }
+                        })
+                    }
                 }
             }
         </script>
