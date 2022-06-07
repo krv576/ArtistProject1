@@ -7,6 +7,69 @@
             callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
         });
     }
+
+    function addUpdateGenre(update, name, submitBtn) {
+        submitBtn.innerHTML = `${update ? "Updating" : "Creating"} genre, Please wait...`
+        submitBtn.disabled = true;
+        execute('/api/genres/' + (update ? update : ""), `${update ? "PUT" : "POST"}`, { name }, function (newTrack) {
+            submitBtn.innerHTML = "Done";
+            alert(name + ` successfully ${update ? "Updated" : "Created"}.`)
+            history.back();
+        }, function (err) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "Submit"
+            console.log("err", err);
+            alert(`${err && err !== "Error" ? err : "Error occurred. Please try again"}`);
+        });
+    }
+
+    let genres = {};
+    function loadGenres(containerId) {
+        let listOL = document.getElementById(containerId);
+        listOL.innerHTML = `<a>Loading genres...</a>`;
+        execute('/api/genres/', 'GET', null, function (genresArray) {
+            let innerHtmlSample = '<li onclick="onGenreSelected($genreId$)" style="cursor:pointer;"  class="w3-half"><dt>$GenreName$</dt><br>$NewLine$$Buttons$</li>';
+            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><button id="$updateGenre$">Update genre</button><a> </a><button id="$deleteGenre$">Delete genre</button><br><br></div>'
+            let innerHtml = "";
+            genres = {};
+            for (let index = 0; index < genresArray.length; index++) {
+                let genre = genresArray[index];
+                genres[genre.id] = genre;
+                let genreIndex = index;
+                if ((genreIndex + 1) > 6) {
+                    genreIndex = index % 6;
+                }
+                let newLine = "";
+                /* if ((index + 1) % 2 == 0) {
+                    newLine = "<br>";
+                } */
+                const element = innerHtmlSample.replace("$GenreName$", genre.name)
+                    .replace("$genreId$", genre.id)
+                    .replace("$Buttons$", buttonHtml)
+                    .replace("$updateGenre$", 'updateGenre' + genre.id)
+                    .replace("$deleteGenre$", 'deleteGenre' + genre.id)
+                    .replace("$buttonsDiv$", 'buttonsDiv' + genre.id)
+                    .replace("$NewLine$", newLine);
+                innerHtml += element;
+                genreIndex++;
+            }
+            if (genresArray.length == 0) {
+                innerHtml = `No genres are available`;
+            }
+            console.log("innerHtml", innerHtml);
+            listOL.innerHTML = innerHtml;
+        }, function (err) {
+            listOL.innerHTML = `<a style="color:red">${err && err !== "Error" ? err : "Error occurred. Please try again"}</a>`;
+        });
+    }
+
+    function onGenreSelected(genreId) {
+        console.log(genreId);
+        /* let genre = genres[genreId];
+        location.href = '../Genre/View.html?id=' + genreId; */
+        let buttonsDivEle = document.getElementById("buttonsDiv" + genreId);
+        buttonsDivEle.style.display = buttonsDivEle.style.display === "none" ? "block" : "none";
+    }
 }
 
 //Track functions
