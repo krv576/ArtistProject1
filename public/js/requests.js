@@ -107,6 +107,15 @@
 
 //Track functions
 {
+
+    function getTrack(trackId, callback) {
+        execute('/api/tracks/' + trackId, 'GET', null, function (track) {
+            callback({ error: false, data: track });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+
     function addUpdateTrack(update, name, length, fileName, oldMelody, albumId, artistId, genreId, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} track, Please wait...`
         submitBtn.disabled = true;
@@ -127,8 +136,9 @@
         let listOL = document.getElementById(containerId);
         listOL.innerHTML = `<a>Loading ${albumName} tracks...</a>`;
         execute('/api/tracks/' + (albumId ? "album/" + albumId : ""), 'GET', null, function (tracksArray) {
-            let innerHtmlSample = '<li onclick="onTrackSelected($trackId$)" style="cursor:pointer;"  class="w3-half"><dt>$TrackName$ ($TrackLength$)</dt><br>$NewLine$</li>';
+            let innerHtmlSample = '<li onclick="onTrackSelected($trackId$)" style="cursor:pointer;" ><dt>$TrackName$ ($TrackLength$)</dt>$NewLine$$Buttons$</li><br>';
             let oldMelodyDisplayStr = '<a style="color:maroon">*</a>';
+            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><p>$descriptionP$</p><button id="$updateTrack$" onclick="location.href=`../Track/Update.html?id=uTrackId`">Update</button><a> </a><button id="$deleteTrack$" onclick="onDeleteTrackSelected($dTrackId$)">Delete</button><br><br></div>'
             let innerHtml = "";
             tracks = {};
             for (let index = 0; index < tracksArray.length; index++) {
@@ -142,9 +152,17 @@
                 /* if ((index + 1) % 2 == 0) {
                     newLine = "<br>";
                 } */
+                let descriptionP = `Duration: ${track.length}<br>File name: ${track.fileName}${track.oldMelody ? "<br>This is an old melody song": "<br>"}<br>`
                 const element = innerHtmlSample.replace("$TrackName$", track.name)
                     .replace("$TrackLength$", track.length)
                     .replace("$trackId$", track.id)
+                    .replace("$Buttons$", buttonHtml)
+                    .replace("uTrackId", track.id)
+                    .replace("$dTrackId$", track.id)
+                    .replace("$descriptionP$", descriptionP)
+                    .replace("$updateTrack$", 'updateTrack' + track.id)
+                    .replace("$deleteTrack$", 'deleteTrack' + track.id)
+                    .replace("$buttonsDiv$", 'buttonsDiv' + track.id)
                     .replace("$NewLine$", newLine);
                 innerHtml += element;
                 trackIndex++;
@@ -159,8 +177,10 @@
     }
 
     function onTrackSelected(trackId) {
-        let track = tracks[trackId];
-        location.href = '../Track/View.html?id=' + trackId;
+        /* let track = tracks[trackId];
+        location.href = '../Track/View.html?id=' + trackId; */
+        let buttonsDivEle = document.getElementById("buttonsDiv" + trackId);
+        buttonsDivEle.style.display = buttonsDivEle.style.display === "none" ? "block" : "none";
     }
 }
 
@@ -218,7 +238,6 @@
         albumsListOL.innerHTML = `<a>Loading ${artistName} albums...</a>`;
         execute('/api/albums/' + (artistId ? "artist/" + artistId : ""), 'GET', null, function (albumsArray) {
             let innerHtmlSample = '<li onclick="onAlbumSelected($albumId$)" style="cursor:pointer;"  class="w3-half"><dt>$AlbumName$ ($AlbumYear$)</dt><br>$NewLine$</li>';
-            let topArtistDisplayStr = '<a style="color:maroon">*</a>';
             let innerHtml = "";
             albums = {};
             for (let index = 0; index < albumsArray.length; index++) {
