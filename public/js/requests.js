@@ -1,5 +1,26 @@
 //Artist functions
 {
+    function getArtists(callback) {
+        execute('/api/artists/', 'GET', null, function (artistsArray) {
+            callback({ error: false, data: artistsArray });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+    function getArtist(artistId, callback) {
+        execute('/api/artists/' + artistId, 'GET', null, function (artist) {
+            callback({ error: false, data: artist });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+    function deleteArtist(artistId, callback) {
+        execute('/api/artists/' + artistId, 'DELETE', null, function (res) {
+            callback({ error: false, data: res });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
     function addUpdateArtist(update, name, topArtist, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} artist, Please wait...`
         submitBtn.disabled = true;

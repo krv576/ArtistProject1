@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Artist</title>
+    <meta name="description" content="New artist can be added here">
+    <meta name="author" content="Nagarjuna Reddy">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+    <style>
+        input[type=checkbox] {
+            transform: scale(2.0);
+        }
+    </style>
+</head>
+
+<body class="w3-light-blue">
+    <div style="margin: 5%;">
+        <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">
+            < Back</a>
+                <div style="margin-left: 5%; margin-top: 2%;">
+                    <h2>Update Artist</h2>
+                    <form onsubmit="onSubmit(event)" id="form" style="margin-left: 5%;">
+                        <label for="fname">Artist name</label><br>
+                        <input type="text" id="name" name="name" value="">
+                        <label id="errorname" style="display:none; color: red;"></label><br><br>
+
+                        <label for="ftopArtist">Top Artist:</label>
+                        <input type="checkbox" id="topArtist" name="topArtist" style="margin-left: 3%;"><br><br>
+                        <button name="submit">Submit</button>
+                    </form>
+                    <p style="margin-left: 5%;">If you click the "Submit" button, artist will be updated</p>
+                </div>
+    </div>
+
+
+    <script>
+        window.onload = init;
+        let artist;
+        function init(callback) {
+            //loadGenres();
+            getArtist(getAllUrlParams().id, function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    artist = res.data;
+                    let title =  'Update (' + artist.name + ')';
+                    document.title = title
+                    document.getElementById("name").value = artist.name;
+                    document.getElementById("topArtist").checked = artist.top;
+                }
+            })
+        }
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorMessage = document.getElementById('errorname');
+            if (e.name.value === '' || !e.name.value.length) {
+                errorMessage.style.display = 'inline';
+                errorMessage.innerText = ' Please enter artist name';
+                return true;
+            }
+            errorMessage.style.display = 'none';
+            errorMessage.innerText = '';
+            // alert('New artist "' + e.name.value + `${e.topArtist.checked ? " (top artist)" : ""}` + '" created successfully');
+            addUpdateArtist(artist.id, e.name.value, e.topArtist.checked, e.submit);
+            return true;
+        }
+    </script>
+</body>
+
+</html>
