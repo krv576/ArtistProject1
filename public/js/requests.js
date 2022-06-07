@@ -8,6 +8,14 @@
         });
     }
 
+    function getGenre(genreId, callback) {
+        execute('/api/genres/' + genreId, 'GET', null, function (genre) {
+            callback({ error: false, data: genre });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+
     function addUpdateGenre(update, name, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} genre, Please wait...`
         submitBtn.disabled = true;
@@ -29,7 +37,7 @@
         listOL.innerHTML = `<a>Loading genres...</a>`;
         execute('/api/genres/', 'GET', null, function (genresArray) {
             let innerHtmlSample = '<li onclick="onGenreSelected($genreId$)" style="cursor:pointer;"  class="w3-half"><dt>$GenreName$</dt><br>$NewLine$$Buttons$</li>';
-            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><button id="$updateGenre$">Update genre</button><a> </a><button id="$deleteGenre$">Delete genre</button><br><br></div>'
+            let buttonHtml = '<div id="$buttonsDiv$" style="display: none"><button id="$updateGenre$" onclick="location.href=`../Genre/Update.html?id=uGenreId`">Update</button><a> </a><button id="$deleteGenre$">Delete genre</button><br><br></div>'
             let innerHtml = "";
             genres = {};
             for (let index = 0; index < genresArray.length; index++) {
@@ -46,6 +54,7 @@
                 const element = innerHtmlSample.replace("$GenreName$", genre.name)
                     .replace("$genreId$", genre.id)
                     .replace("$Buttons$", buttonHtml)
+                    .replace("uGenreId", genre.id)
                     .replace("$updateGenre$", 'updateGenre' + genre.id)
                     .replace("$deleteGenre$", 'deleteGenre' + genre.id)
                     .replace("$buttonsDiv$", 'buttonsDiv' + genre.id)
