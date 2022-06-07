@@ -110,7 +110,7 @@
     function addUpdateTrack(update, name, length, fileName, oldMelody, albumId, artistId, genreId, submitBtn) {
         submitBtn.innerHTML = `${update ? "Updating" : "Creating"} track, Please wait...`
         submitBtn.disabled = true;
-        execute('/api/albums/' + (update ? update : ""), `${update ? "PUT" : "POST"}`, { name, length, fileName, oldMelody, albumId, artistId, genreId }, function (newTrack) {
+        execute('/api/tracks/' + (update ? update : ""), `${update ? "PUT" : "POST"}`, { name, length, fileName, oldMelody, albumId, artistId, genreId }, function (newTrack) {
             submitBtn.innerHTML = "Done";
             alert(name + ` successfully ${update ? "Updated" : "Created"}.`)
             history.back();
