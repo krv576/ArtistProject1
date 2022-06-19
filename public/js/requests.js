@@ -160,7 +160,7 @@
                 /* if ((index + 1) % 2 == 0) {
                     newLine = "<br>";
                 } */
-                let descriptionP = `Duration: ${track.length}<br>File name: ${track.fileName}${track.oldMelody ? "<br>This is an old melody song" : "<br>"}<br>`
+                let descriptionP = `Duration: ${track.length}<br>File name: ${track.fileName}${track.oldMelody ? "<br>This is an old melody track" : "<br>"}<br>`
                 const element = innerHtmlSample.replace("$TrackName$", track.name)
                     .replace("$TrackLength$", track.length)
                     .replace("$trackId$", track.id)
