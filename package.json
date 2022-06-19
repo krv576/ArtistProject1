@@ -1,5 +1,12 @@
 {
-  "dependencies": {
-    "express": "^4.18.1"
-  }
+  "name": "artist_project_front_end",
+  "version": "1.0.0",
+  "description": "Artist project front end",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "author": "TeamWork of Shashi preetham ganta, Sahithi kommineni, Nagarjuna Reddy, Rishwant and Rishik Vardhan",
+  "license": "ISC"
 }
