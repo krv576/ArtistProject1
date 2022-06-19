@@ -461,7 +461,8 @@
         return obj;
     }
     function execute(urlPath, requestMethod, requestBody, onSuccess, onError) {
-        let url = "http://localhost:3000" + urlPath;
+        // let url = "http://localhost:3000" + urlPath;
+        let url = "http://54.167.159.97:3000" + urlPath;
         requestAPI(url, requestMethod, requestBody, function (err, response) {
             if (err) {
                 if (onError) {

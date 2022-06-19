@@ -2,7 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const hostname = 'localhost';
+// const hostname = 'localhost';
+const hostname = '54.197.73.76';
 const port = 3001;
 
 const server = http.createServer((req, res) => {
@@ -12,9 +13,10 @@ const server = http.createServer((req, res) => {
         var fileUrl;
         if (req.url == '/') fileUrl = '/Home.html';
         else fileUrl = req.url;
-
+        fileUrl = fileUrl.includes("?") ? fileUrl.substring(0, fileUrl.indexOf("?")) : fileUrl;
         var filePath = path.resolve('./public' + fileUrl);
         const fileExt = path.extname(filePath);
+        console.log("fileExt", fileExt);
         if (fileExt == '.html') {
             let exists = fs.existsSync(filePath);
             if (!exists) {
@@ -50,6 +52,6 @@ const server = http.createServer((req, res) => {
 });
 
 
-server.listen(port, hostname, () => {
+server.listen(port, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
