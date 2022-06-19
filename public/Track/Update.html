@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Track</title>
+    <meta name="description" content="Track can be update here">
+    <meta name="author" content="Rishik Vardhan kolipaka">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+    <style>
+        input[type=checkbox] {
+            transform: scale(2.0);
+        }
+    </style>
+</head>
+
+<body class="w3-light-blue">
+    <div style="margin: 5%;">
+        <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">◄ Back</a>
+        <div style="margin-left: 5%; margin-top: 2%;">
+            <h2>Update Track</h2>
+            <form onsubmit="onSubmit(event)" id="form" style="margin-left: 5%;">
+                <label for="fname">Track name</label><br>
+                <input type="text" id="name" name="name" value="" style="min-width: 17%; min-height: 40px;">
+                <label id="errorname" style="display:none; color: red;"></label><br><br>
+
+                <label for="flength">Track Length</label>
+                <small>Ex: 4:24 (4 minutes 24 seconds)</small><br>
+                <input type="text" id="fileLength" name="fileLength" value="" placeholder="" style="min-width: 17%; min-height: 40px;">
+                <label id="errorlength" style="display:none; color: red;"></label><br><br>
+
+                <label for="ffileName">Track File name</label><br>
+                <input type="text" id="fileName" name="fileName" value="" style="min-width: 17%; min-height: 40px;">
+                <label id="errorFileName" style="display:none; color: red;"></label><br><br>
+
+                <label for="foldMelody">Old Melody:</label>
+                <input type="checkbox" id="oldMelody" name="oldMelody" style="margin-left: 3%;"><br><br>
+
+                <label for="falbums">Select album</label><br>
+                <select name="albums" id="albums" style="min-width: 25%; min-height: 40px;">
+                    <option value="artist0">Loading...</option>
+                </select>
+                <label id="erroralbum" style="display:none; color: red;"></label><br><br>
+
+                <label for="fartists">Select artist</label><br>
+                <select name="artists" id="artists" style="min-width: 25%; min-height: 40px;">
+                    <option value="artist0">Loading...</option>
+                </select>
+                <label id="errorartist" style="display:none; color: red;"></label><br><br>
+
+                <label for="fgenres">Select genre</label><br>
+                <select name="genres" id="genres" style="min-width: 25%; min-height: 40px;">
+                    <option value="genre0">Loading...</option>
+                </select>
+                <label id="errorgenre" style="display:none; color: red;"></label><br><br>
+                <button name="submit">Submit</button>
+            </form>
+            <p style="margin-left: 5%;">If you click the "Submit" button, track will be updated</p>
+        </div>
+    </div>
+
+
+    <script>
+        window.onload = init;
+        let track;
+        function init(callback) {
+            getTrack(getAllUrlParams().id, function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    track = res.data;
+                    let title =  'Update (' + track.name + ')';
+                    document.title = title
+                    document.getElementById("name").value = track.name;
+                    document.getElementById("fileLength").value = track.length;
+                    document.getElementById("fileName").value = track.fileName;
+                    document.getElementById("oldMelody").checked = track.oldMelody;
+                }
+            })
+            getAlbums(function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    let albums = res.data;
+                    loadAlbumsOnDropDown(albums);
+                }
+            })
+            getArtists(function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    let artists = res.data;
+                    loadArtistsOnDropDown(artists);
+                }
+            })
+            getGenres(function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    let genres = res.data;
+                    loadGenresOnDropDown(genres);
+                }
+            })
+        }
+
+        function loadAlbumsOnDropDown(albums) {
+            let innerHTML = '';
+            for (let index = 0; index < albums.length; index++) {
+                const album = albums[index];
+                let associatedAlbum = false; 
+                if (track.albumId === album.id) {
+                    associatedAlbum = true; 
+                }
+                let optionTag = `<option  ${associatedAlbum ? "selected " : ""}value="${album.id}">${album.name} (${album.year})</option>`
+                innerHTML += optionTag;
+            }
+            document.getElementById("albums").innerHTML = innerHTML;
+        }
+
+        function loadArtistsOnDropDown(artists) {
+            let innerHTML = '';
+            for (let index = 0; index < artists.length; index++) {
+                const artist = artists[index];
+                let associatedArtist = false; 
+                if (track.artistId === artist.id) {
+                    associatedArtist = true; 
+                }
+                let optionTag = `<option ${associatedArtist ? "selected " : ""}value="${artist.id}">${artist.name}</option>`
+                innerHTML += optionTag;
+            }
+            document.getElementById("artists").innerHTML = innerHTML;
+        }
+
+        function loadGenresOnDropDown(genres) {
+            let innerHTML = '';
+            for (let index = 0; index < genres.length; index++) {
+                const genre = genres[index];
+                let associatedGenre = false; 
+                if (track.genreId === genre.id) {
+                    associatedGenre = true; 
+                }
+                let optionTag = `<option  ${associatedGenre ? "selected " : ""}value="${genre.id}">${genre.name}</option>`
+                innerHTML += optionTag;
+            }
+            document.getElementById("genres").innerHTML = innerHTML;
+        }
+
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorName = document.getElementById('errorname');
+            let errorLength = document.getElementById('errorlength');
+            let errorAlbum = document.getElementById('erroralbum');
+            let errorArtist = document.getElementById('errorartist');
+            let errorGenre = document.getElementById('errorgenre');
+            let areValid = true;
+            if (!e.name || e.name.value === '' || !e.name.value.length) {
+                errorName.style.display = 'inline';
+                errorName.innerText = ' Please enter track name';
+                areValid = false;
+            } else {
+                errorName.style.display = 'none';
+                errorName.innerText = '';
+            }
+            if (!e.fileLength || e.fileLength.value === '' || !e.fileLength.value.length) {
+                errorLength.style.display = 'inline';
+                errorLength.innerText = ' Please enter track length';
+                areValid = false;
+            } else {
+                errorLength.style.display = 'none';
+                errorLength.innerText = '';
+            }
+            let albumValue = e.albums.options[e.albums.selectedIndex].value;
+            console.log("albumValue", albumValue);
+            if (!albumValue || albumValue === '' || !albumValue.length) {
+                errorAlbum.style.display = 'inline';
+                errorAlbum.innerText = ' Please select album';
+                areValid = false;
+            } else {
+                errorAlbum.style.display = 'none';
+                errorAlbum.innerText = '';
+            }
+            let artistValue = e.artists.options[e.artists.selectedIndex].value;
+            console.log("artistValue", artistValue);
+            if (!artistValue || artistValue === '' || !artistValue.length) {
+                errorArtist.style.display = 'inline';
+                errorArtist.innerText = ' Please select artist';
+                areValid = false;
+            } else {
+                errorArtist.style.display = 'none';
+                errorArtist.innerText = '';
+            }
+            let genreValue = e.genres.options[e.genres.selectedIndex].value;
+            console.log("genreValue", genreValue);
+            if (!genreValue || genreValue === '' || !genreValue.length) {
+                errorGenre.style.display = 'inline';
+                errorGenre.innerText = ' Please select genre';
+                areValid = false;
+            } else {
+                errorGenre.style.display = 'none';
+                errorGenre.innerText = '';
+            }
+            if (!areValid) {
+                return true;
+            }
+            addUpdateTrack(track.id, e.name.value, e.fileLength.value, e.fileName.value, e.oldMelody.checked, albumValue, artistValue, genreValue, e.submit);
+            return true;
+        }
+    </script>
+</body>
+
+</html>

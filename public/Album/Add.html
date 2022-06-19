@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Album</title>
+    <meta name="description" content="New artist can be added here">
+    <meta name="author" content="Nagarjuna Reddy">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+    <style>
+        input[type=checkbox] {
+            transform: scale(2.0);
+        }
+    </style>
+</head>
+
+<body class="w3-light-blue">
+    <div style="margin: 5%;">
+        <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">◄ Back</a>
+        <div style="margin-left: 5%; margin-top: 2%;">
+            <h2>Add Album</h2>
+            <form onsubmit="onSubmit(event)" id="form" style="margin-left: 5%;">
+                <label for="fname">Album name</label><br>
+                <input type="text" id="name" name="name" value="" style="min-width: 17%; min-height: 40px;">
+                <label id="errorname" style="display:none; color: red;"></label><br><br>
+
+                <label for="fyear">Album Year</label><br>
+                <input type="text" id="year" name="year" value="" style="min-width: 17%; min-height: 40px;">
+                <label id="erroryear" style="display:none; color: red;"></label><br><br>
+
+                <label for="fartists">Select artist</label><br>
+                <select name="artists" id="artists" style="min-width: 17%; min-height: 40px;">
+                    <option value="artist0">Loading...</option>
+                </select>
+                <label id="errorartist" style="display:none; color: red;"></label><br><br>
+
+                <label for="fgenres">Select genre</label><br>
+                <select name="genres" id="genres" style="min-width: 17%; min-height: 40px;">
+                    <option value="genre0">Loading...</option>
+                </select>
+                <label id="errorgenre" style="display:none; color: red;"></label><br><br>
+                <button name="submit">Submit</button>
+            </form>
+            <p style="margin-left: 5%;">If you click the "Submit" button, new album will be created</p>
+        </div>
+    </div>
+
+
+    <script>
+        window.onload = init;
+        function init(callback) {
+            getArtists(function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    let artists = res.data;
+                    loadArtistsOnDropDown(artists);
+                }
+            })
+            getGenres(function (res) {
+                console.log(res);
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    let genres = res.data;
+                    loadGenresOnDropDown(genres);
+                }
+            })
+        }
+
+        function loadArtistsOnDropDown(artists) {
+            let innerHTML = '';
+            for (let index = 0; index < artists.length; index++) {
+                const artist = artists[index];
+                let optionTag = `<option value="${artist.id}">${artist.name}</option>`
+                innerHTML += optionTag;
+            }
+            document.getElementById("artists").innerHTML = innerHTML;
+        }
+
+        function loadGenresOnDropDown(genres) {
+            let innerHTML = '';
+            for (let index = 0; index < genres.length; index++) {
+                const genre = genres[index];
+                let optionTag = `<option value="${genre.id}">${genre.name}</option>`
+                innerHTML += optionTag;
+            }
+            document.getElementById("genres").innerHTML = innerHTML;
+        }
+
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorName = document.getElementById('errorname');
+            let errorArtist = document.getElementById('errorartist');
+            let errorYear = document.getElementById('erroryear');
+            let errorGenre = document.getElementById('errorgenre');
+            let areValid = true;
+            if (!e.name || e.name.value === '' || !e.name.value.length) {
+                errorName.style.display = 'inline';
+                errorName.innerText = ' Please enter album name';
+                areValid = false;
+            } else {
+                errorName.style.display = 'none';
+                errorName.innerText = '';
+            }
+            if (!e.year || e.year.value === '' || !e.year.value.length) {
+                errorYear.style.display = 'inline';
+                errorYear.innerText = ' Please enter album year';
+                areValid = false;
+            } else {
+                errorYear.style.display = 'none';
+                errorYear.innerText = '';
+            }
+            let artistValue = e.artists.options[e.artists.selectedIndex].value;
+            console.log("artistValue", artistValue);
+            if (!artistValue || artistValue === '' || !artistValue.length) {
+                errorArtist.style.display = 'inline';
+                errorArtist.innerText = ' Please select artist';
+                areValid = false;
+            } else {
+                errorArtist.style.display = 'none';
+                errorArtist.innerText = '';
+            }
+            let genreValue = e.genres.options[e.genres.selectedIndex].value;
+            console.log("genreValue", genreValue);
+            if (!genreValue || genreValue === '' || !genreValue.length) {
+                errorGenre.style.display = 'inline';
+                errorGenre.innerText = ' Please select genre';
+                areValid = false;
+            } else {
+                errorGenre.style.display = 'none';
+                errorGenre.innerText = '';
+            }
+            if (!areValid) {
+                return true;
+            }
+            //alert('New album "' + e.name.value + ' by (' + artistValue + ' - ' + genreValue + ')" created successfully');
+            addUpdateAlbum(false, e.name.value, e.year.value, artistValue, genreValue, e.submit);
+            return true;
+        }
+    </script>
+</body>
+
+</html>

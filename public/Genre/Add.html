@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Genre</title>
+    <meta name="description" content="New genre can be added here">
+    <meta name="author" content="Rishik Vardhan">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+</head>
+
+<body class="w3-light-blue">
+    <div style="margin: 5%;">
+        <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">◄ Back</a>
+        <div style="margin-left: 5%; margin-top: 2%;">
+            <h2>Add Genre</h2>
+            <form onsubmit="onSubmit(event)" id="form" style="margin-left: 5%;">
+                <label for="fname">Genre name</label><br>
+                <input type="text" id="name" name="name" value="">
+                <label id="errorname" style="display:none; color: red;"></label><br><br>
+
+                <button name="submit">Submit</button>
+            </form>
+            <p style="margin-left: 5%;">If you click the "Submit" button, new genre will be created</p>
+        </div>
+    </div>
+
+
+    <script>
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorMessage = document.getElementById('errorname');
+            if (e.name.value === '' || !e.name.value.length) {
+                errorMessage.style.display = 'inline';
+                errorMessage.innerText = ' Please enter genre name';
+                return true;
+            }
+            errorMessage.style.display = 'none';
+            errorMessage.innerText = '';
+            addUpdateGenre(false, e.name.value, e.submit);
+            return true;
+        }
+    </script>
+</body>
+
+</html>

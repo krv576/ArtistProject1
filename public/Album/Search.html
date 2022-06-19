@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search album</title>
+    <meta name="description" content="Search required album here">
+    <meta name="author" content="Sahithi kommineni">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+</head>
+
+<body class="w3-light-blue">
+    <div style="margin: 5%;">
+        <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">◄ Back</a>
+        <div style="margin-left: 5%;">
+            <h2>Search Album</h2>
+            <form onsubmit="onSubmit(event)" id="form">
+                <!-- <label for="fSearchtext">Search album here</label><br> -->
+                <input type="text" id="searchtext" name="searchtext" value=""
+                    placeholder="Search using album name or album year">
+                <label id="errorsearchtext" style="display:none; color: red;"></label><br><br>
+                <button name="search">Search</button>
+            </form>
+            <p>Click "Search" button to start search album</p>
+        </div>
+
+        <!-- Project Description -->
+        <section class="w3-container" id="albumsContainer"
+            style="padding-top: 3%; padding-left: 5%; padding-right: 5%; padding-bottom: 10%;">
+            <h2 id="#title">Albums</h2>
+            <dl style="padding-left: 5%; padding-top: 1%;">
+                <ol id="listContainer">
+                    <li class="w3-quarter">
+                        <dt>Loading...</dt>
+                    </li>
+                </ol>
+            </dl>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById("albumsContainer").style.display = "none";
+        let inputEle = document.getElementById("searchtext");
+        inputEle.setAttribute('size', inputEle.getAttribute('placeholder').length);
+        function onSubmit(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorMessage = document.getElementById('errorsearchtext');
+            if (e.searchtext.value === '' || !e.searchtext.value.length) {
+                errorMessage.style.display = 'inline';
+                errorMessage.innerText = ' Please enter text to search';
+                return true;
+            }
+            errorMessage.style.display = 'none';
+            errorMessage.innerText = '';
+            //alert('Album "' + e.searchtext.value + '" found successfully');
+            let queryStr = "?name=" + e.searchtext.value + "&year=" + e.searchtext.value;
+            document.getElementById("albumsContainer").style.display = "block";
+            let submitBtn = e.search;
+            submitBtn.innerHTML = `Searching albums, Please wait...`
+            submitBtn.disabled = true;
+            searchAlbums(queryStr, function (res) {
+                console.log(res);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = "Search"
+                if (res.error) {
+                    alert(res.data);
+                    history.back();
+                } else {
+                    let artists = res.data;
+                    loadAlbumsOnUI(artists, "listContainer");
+                }
+            })
+            return true;
+        }
+
+        function loadAlbumsOnUI(albumsArray, containerId) {
+            let listOL = document.getElementById(containerId);
+            let titleHeader = document.getElementById("#title");
+            titleHeader.innerHTML = `${albumsArray.length} album${albumsArray.length == 1 ? "" : "s"} found`;
+            listOL.innerHTML = `<a>Loading albums...</a>`;
+            let innerHtmlSample = '<li onclick="onAlbumSelectedLocal($albumId$)" style="cursor:pointer;"  class="w3-half"><dt>$AlbumName$ ($AlbumYear$)</dt><br>$NewLine$</li>';
+            let innerHtml = "";
+            for (let index = 0; index < albumsArray.length; index++) {
+                let album = albumsArray[index];
+                let albumIndex = index;
+                if ((albumIndex + 1) > 6) {
+                    albumIndex = index % 6;
+                }
+                let newLine = "";
+                const element = innerHtmlSample.replace("$AlbumName$", album.name)
+                    .replace("$AlbumYear$", album.year)
+                    .replace("$albumId$", album.id)
+                    .replace("$NewLine$", newLine);
+                innerHtml += element;
+                albumIndex++;
+            }
+            if (albumsArray.length == 0) {
+                innerHtml = `No albums are found for the given search`;
+            }
+            console.log("innerHtml", innerHtml)
+            listOL.innerHTML = innerHtml;
+        }
+
+        function onAlbumSelectedLocal(albumId) {
+            location.href = './View.html?id=' + albumId;
+        }
+    </script>
+</body>
+
+</html>
