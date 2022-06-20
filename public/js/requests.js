@@ -371,7 +371,7 @@
         albumsListOL.innerHTML = `<a>Loading ${onlyTopArtists ? "top " : ""}artists...</a>`;
         execute('/api/artists/' + (onlyTopArtists ? "top/" : ""), 'GET', null, function (artistsArray) {
             let innerHtmlSample = '<li onclick="onArtistSelected($artistId$)" style="cursor:pointer;"  class="w3-half"><dt>$TopArtist$$ArtistName$</dt><br>$NewLine$</li>';
-            let topArtistDisplayStr = '<a style="color:maroon">*</a>';
+            let topArtistDisplayStr = '<a style="color:maroon"></a>';
             let innerHtml = "";
             artists = {};
             for (let index = 0; index < artistsArray.length; index++) {
