@@ -17,11 +17,13 @@
         <nav class="w3-bar w3-dark-grey">
             <a onclick="onArtistsClicked(false)" class="w3-button w3-bar-item">Home</a>
             <a onclick="onArtistsClicked(true)" class="w3-button w3-bar-item">Top Artists</a>
-            <a href="./Artist/Add.html" class="w3-button w3-bar-item">Add Artist</a>
+            <a href="./Artist/Add.html" id="addArtistATag" style="display: none;" class="w3-button w3-bar-item">Add Artist</a>
             <a href="./Artist/Search.html"  class="w3-button w3-bar-item">Search Artist</a>
             <a href="./Album/Index.html"  class="w3-button w3-bar-item">Albums</a>
             <a href="./Genre/Index.html"  class="w3-button w3-bar-item">Genres</a>
             <a onclick="onOldMelodiesClicked()" class="w3-button w3-bar-item">OLD Melodies</a>
+            <a onclick="onLoginClicked()" id="loginATag" class="w3-button w3-bar-item">LOGIN</a>
+            <a onclick="onLogoutClicked()" id="logoutATag" style="display: none;" class="w3-button w3-bar-item">LOGOUT</a>
         </nav>
 
         <!-- Project Description -->
@@ -71,6 +73,15 @@
     <script>
         window.onload = init;
         function init() {
+            if(localStorage.getItem("loginStatus") === "true") {
+                document.getElementById("loginATag").style.display = "none";
+                document.getElementById("logoutATag").style.display = "block";
+                document.getElementById("addArtistATag").style.display = "block";
+            } else {
+                document.getElementById("loginATag").style.display = "block";
+                document.getElementById("logoutATag").style.display = "none";
+                document.getElementById("addArtistATag").style.display = "none";
+            }
             onArtistsClicked();
         }
         function onArtistsClicked(onlyTopArtists) {
@@ -80,6 +91,13 @@
         function onOldMelodiesClicked() {
             document.getElementById("#title").innerHTML = "Old melodies"
             loadTracks("listContainer", null, null, true);
+        }
+        function onLoginClicked() {
+            location.href = "./Login.html";
+        }
+        function onLogoutClicked() {
+            localStorage.setItem("loginStatus", "false");
+            location.reload();
         }
     </script>
 </body>

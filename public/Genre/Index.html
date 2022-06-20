@@ -18,7 +18,7 @@
             <!-- Navigation -->
             <nav class="w3-bar w3-dark-grey">
                 <a href="javascript:history.back()" class="w3-button w3-bar-item">◄ Back</a>
-                <a href="./Add.html" class="w3-button w3-bar-item">Add Genre</a>
+                <a href="./Add.html" id="addGenreATag" style="display: none;" class="w3-button w3-bar-item">Add Genre</a>
                 <!-- <a href="./Search.html" class="w3-button w3-bar-item">Search Genres</a> -->
             </nav>
 
@@ -38,6 +38,11 @@
         <script>
             window.onload = init;
             function init(callback) {
+                if (localStorage.getItem("loginStatus") === "true") {
+                    document.getElementById("addGenreATag").style.display = "block";
+                } else {
+                    document.getElementById("addGenreATag").style.display = "none";
+                }
                 loadGenres("listContainer");
                 if (callback && typeof callback === "function") {
                     callback();

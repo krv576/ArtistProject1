@@ -84,8 +84,9 @@
         console.log(genreId);
         /* let genre = genres[genreId];
         location.href = '../Genre/View.html?id=' + genreId; */
+        let loggedInStatus = localStorage.getItem("loginStatus") === "true";
         let buttonsDivEle = document.getElementById("buttonsDiv" + genreId);
-        buttonsDivEle.style.display = buttonsDivEle.style.display === "none" ? "block" : "none";
+        buttonsDivEle.style.display = loggedInStatus ? buttonsDivEle.style.display === "none" ? "block" : "none" : "none";
     }
 
     function onDeleteGenreSelected(genreId) {
@@ -198,8 +199,13 @@
     function onTrackSelected(trackId) {
         /* let track = tracks[trackId];
         location.href = '../Track/View.html?id=' + trackId; */
+        let loggedInStatus = localStorage.getItem("loginStatus") === "true";
         let buttonsDivEle = document.getElementById("buttonsDiv" + trackId);
         buttonsDivEle.style.display = buttonsDivEle.style.display === "none" ? "block" : "none";
+        let updateTrackEle = document.getElementById("updateTrack" + trackId);
+        let deleteTrackEle = document.getElementById("deleteTrack" + trackId);
+        updateTrackEle.style.display = loggedInStatus ? "block" : "none";
+        deleteTrackEle.style.display = loggedInStatus ? "block" : "none";
     }
 
     function onDeleteTrackSelected(trackId, albumId, albumName, onlyOldMelodies) {

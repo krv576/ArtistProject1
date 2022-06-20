@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login</title>
+    <meta name="description" content="Admin can have access to add/updated/delete operations">
+    <meta name="author" content="Rishik Vardhan">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+    <script src="../js/requests.js"></script>
+    <style>
+        input[type=checkbox] {
+            transform: scale(2.0);
+        }
+    </style>
+</head>
+
+<body class="w3-light-blue">
+    <div style="margin: 5%;">
+        <a href="javascript:history.back()" style="text-decoration: none" class="w3-bar-item">◄ Back</a>
+        <div style="margin-left: 5%; margin-top: 2%;">
+            <h2>Admin Login</h2>
+            <form onsubmit="onSubmit(event)" id="form" style="margin-left: 5%;">
+                <label for="fname">Username</label><br>
+                <input type="text" id="name" name="name" value="">
+                <label id="errorname" style="display:none; color: red;"></label><br><br>
+
+                <label for="fpassword">Password</label><br>
+                <input type="password" id="password" name="password" value="">
+                <label id="errorpassword" style="display:none; color: red;"></label><br><br>
+
+                <label id="errorFinal" style="display:none; color: red;"></label><br>
+                <button name="submit">LOGIN</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        function onSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('form');
+            let e = form.elements;
+            let errorMessage = document.getElementById('errorname');
+            let errorMessage2 = document.getElementById('errorpassword');
+            let errorMessage3 = document.getElementById('errorFinal');
+            errorMessage.style.display = 'none';
+            errorMessage2.style.display = 'none';
+            errorMessage3.style.display = 'none';
+
+            if (e.name.value === '' || !e.name.value.length) {
+                errorMessage.style.display = 'inline';
+                errorMessage.innerText = ' Please enter username';
+                return true;
+            }
+            errorMessage.style.display = 'none';
+            errorMessage.innerText = '';
+
+            if (e.password.value === '' || !e.password.value.length) {
+                errorMessage2.style.display = 'inline';
+                errorMessage2.innerText = ' Please enter password';
+                return true;
+            }
+            errorMessage2.style.display = 'none';
+            errorMessage2.innerText = '';
+            
+            if (e.name.value !== 'admin' || e.password.value !== 'artist123') {
+                errorMessage3.style.display = 'inline';
+                errorMessage3.innerText = ' Invalid login details. Please check and try again';
+                return true;
+            }
+            errorMessage3.style.display = 'none';
+            errorMessage3.innerText = '';
+
+            localStorage.setItem("loginStatus", "true");
+            alert("Logged in Successfully");
+            location.replace("./Home.html")
+            return true;
+        }
+    </script>
+</body>
+
+</html>

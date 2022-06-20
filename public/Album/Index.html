@@ -18,7 +18,8 @@
             <!-- Navigation -->
             <nav class="w3-bar w3-dark-grey">
                 <a href="javascript:history.back()" class="w3-button w3-bar-item">◄ Back</a>
-                <a href="./Add.html" class="w3-button w3-bar-item">Add Album</a>
+                <a href="./Add.html" id="addAlbumATag" style="display: none;" class="w3-button w3-bar-item">Add
+                    Album</a>
                 <a href="./Search.html" class="w3-button w3-bar-item">Search Album</a>
             </nav>
 
@@ -38,6 +39,11 @@
         <script>
             window.onload = init;
             function init(callback) {
+                if (localStorage.getItem("loginStatus") === "true") {
+                    document.getElementById("addAlbumATag").style.display = "block";
+                } else {
+                    document.getElementById("addAlbumATag").style.display = "none";
+                }
                 loadAlbums("listContainer");
                 if (callback && typeof callback === "function") {
                     callback();

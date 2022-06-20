@@ -18,9 +18,9 @@
             <!-- Navigation -->
             <nav class="w3-bar w3-dark-grey">
                 <a href="javascript:history.back()" class="w3-button w3-bar-item">◄ Back</a>
-                <a onclick="onUpdateArtistClicked()" class="w3-button w3-bar-item">Update Artist</a>
-                <a onclick="onDeleteArtistClicked()" class="w3-button w3-bar-item">Delete Artist</a>
-                <a href="../Album/Add.html" class="w3-button w3-bar-item">Add Album</a>
+                <a onclick="onUpdateArtistClicked()" id="updateArtistATag" style="display: none;" class="w3-button w3-bar-item">Update Artist</a>
+                <a onclick="onDeleteArtistClicked()" id="deleteArtistATag" style="display: none;" class="w3-button w3-bar-item">Delete Artist</a>
+                <a href="../Album/Add.html" id="addAlbumATag" style="display: none;" class="w3-button w3-bar-item">Add Album</a>
                 <a href="../Album/Search.html" class="w3-button w3-bar-item">Search Album</a>
             </nav>
 
@@ -41,6 +41,15 @@
             window.onload = init;
             let artist;
             function init(callback) {
+                if (localStorage.getItem("loginStatus") === "true") {
+                    document.getElementById("updateArtistATag").style.display = "block";
+                    document.getElementById("deleteArtistATag").style.display = "block";
+                    document.getElementById("addAlbumATag").style.display = "block";
+                } else {
+                    document.getElementById("updateArtistATag").style.display = "none";
+                    document.getElementById("deleteArtistATag").style.display = "none";
+                    document.getElementById("addAlbumATag").style.display = "none";
+                }
                 //loadGenres();
                 getArtist(getAllUrlParams().id, function (res) {
                     console.log(res);
