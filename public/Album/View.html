@@ -21,6 +21,7 @@
                 <a onclick="onUpdateAlbumClicked()" class="w3-button w3-bar-item">Update Album</a>
                 <a onclick="onDeleteAlbumClicked()" class="w3-button w3-bar-item">Delete Album</a>
                 <a href="../Track/Add.html" class="w3-button w3-bar-item">Add Track</a>
+                <a onclick="onBuyAlbumClicked()" class="w3-button w3-bar-item">Buy Album</a>
                 <!-- <a href="../Track/Search.html" class="w3-button w3-bar-item">Search Track</a> -->
             </nav>
 
@@ -81,6 +82,26 @@
                                 history.back();
                             } else {
                                 alert(res.data.message);
+                                history.back();
+                            }
+                        })
+                    }
+                }
+            }
+            function onBuyAlbumClicked() {
+                if (!album) {
+                    init(function () {
+                        onBuyAlbumClicked();
+                    })
+                } else {
+                    if (confirm(`Please confirm buying album "${album.name}". Are you sure ..?`)) {
+                        deleteAlbum(getAllUrlParams().id, function (res) {
+                            console.log(res);
+                            if (res.error) {
+                                alert(res.data);
+                                history.back();
+                            } else {
+                                alert(`Album "${album.name}" bought successfully. Thank you, visit again!`);
                                 history.back();
                             }
                         })
