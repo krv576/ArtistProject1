@@ -108,6 +108,14 @@
 //Track functions
 {
 
+    function getTracks(albumId, callback) {
+        execute('/api/tracks/album/' + albumId, 'GET', null, function (tracks) {
+            callback({ error: false, data: tracks });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
+
     function getTrack(trackId, callback) {
         execute('/api/tracks/' + trackId, 'GET', null, function (track) {
             callback({ error: false, data: track });
