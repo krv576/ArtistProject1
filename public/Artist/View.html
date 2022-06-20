@@ -67,24 +67,97 @@
                     location.href = './Update.html?id=' + artist.id;
                 }
             }
-            function onDeleteArtistClicked() {
+            async function onDeleteArtistClicked() {
                 if (!artist) {
                     init(function () {
                         onDeleteArtistClicked();
                     })
-                } else {
-                    if (confirm('Artist will be deleted permanantly. Are you sure ..?')) {
-                        deleteArtist(getAllUrlParams().id, function (res) {
-                            console.log(res);
-                            if (res.error) {
-                                alert(res.data);
-                                history.back();
-                            } else {
-                                alert(res.data.message);
-                                history.back();
-                            }
-                        })
+                    return;
+                }
+                getAlbumsByArtist(getAllUrlParams().id, function (resAlbums) {
+                    console.log("resAlbums", resAlbums);
+                    if (resAlbums.error) {
+                        alert(resAlbums.data);
+                        history.back();
+                        return;
                     }
+                    let albums = resAlbums.data;
+                    getAllTracksFromAlbums(albums, async function (tracksRes) {
+                        console.log("tracksRes", tracksRes);
+                        if (!tracksRes) {
+                            /* alert(resAlbums.data);
+                            history.back(); */
+                            return;
+                        }
+                        let tracks = tracksRes;
+                        let alertMessage = 'Artist will be deleted permanantly. Are you sure ..?';
+                        let albumsAlert = '';
+                        let tracksAlert = '';
+                        if (albums.length > 0) {
+                            let isPluralAlbums = albums.length !== 1;
+                            albumsAlert = `, ${albums.length}-album${isPluralAlbums ? "s" : ""}`;
+                        }
+                        if (tracks.length > 0) {
+                            let isPluralTracks = tracks.length !== 1;
+                            tracksAlert = ` and ${tracks.length}-track${isPluralTracks ? "s" : ""}`;
+                        }
+                        if (albumsAlert.length > 1 || tracksAlert.length > 1) {
+                            alertMessage = `"Selected Artist ${albumsAlert}${tracksAlert}" will be deleted permanantly. Are you sure ..?`;
+                        }
+                        if (confirm(alertMessage)) {
+                            if (albums.length > 0) {
+                                for (let index = 0; index < albums.length; index++) {
+                                    const album = albums[index];
+                                    let delAlbumRes = await deleteAlbum(album.id);
+                                    console.log("delete albums one by one", delAlbumRes);
+                                }
+                            }
+                            if (tracks.length > 0) {
+                                for (let index = 0; index < tracks.length; index++) {
+                                    const track = tracks[index];
+                                    let delTrackRes = await deleteTrack(track.id);
+                                    console.log("delete tracks one by one", delTrackRes);
+                                }
+                            }
+                            deleteArtist(getAllUrlParams().id, function (res) {
+                                console.log(res);
+                                if (res.error) {
+                                    alert(res.data);
+                                    history.back();
+                                } else {
+                                    alert(res.data.message);
+                                    history.back();
+                                }
+                            })
+                        }
+                    });
+                });
+            }
+            function getAllTracksFromAlbums(albums, callback) {
+                let tracks = [];
+                if (albums.length === 0) {
+                    callback(tracks);
+                    return;
+                }
+                for (let index = 0; index < albums.length; index++) {
+                    const album = albums[index];
+                    getTracks(album.id, function (resTracks) {
+                        console.log(resTracks);
+                        if (resTracks.error) {
+                            alert(resTracks.data);
+                            history.back();
+                            callback(false);
+                            return;
+                        }
+                        let tracksLocal = resTracks.data;
+                        for (let index2 = 0; index2 < tracksLocal.length; index2++) {
+                            const trackLocal = tracksLocal[index2];
+                            tracks.push(trackLocal);
+                        }
+                        if ((index + 1) === albums.length) {
+                            callback(tracks);
+                        }
+                    });
                 }
             }
         </script>

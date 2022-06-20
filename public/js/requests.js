@@ -231,6 +231,13 @@
             callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
         });
     }
+    function getAlbumsByArtist(artistId, callback) {
+        execute('/api/albums/artist/' + artistId, 'GET', null, function (albumssArray) {
+            callback({ error: false, data: albumssArray });
+        }, function (err) {
+            callback({ error: true, data: `${err && err !== "Error" ? err : "Error occurred. Please try again"}` });
+        });
+    }
     function getAlbums(callback) {
         execute('/api/albums/', 'GET', null, function (albumssArray) {
             callback({ error: false, data: albumssArray });
