@@ -298,7 +298,7 @@
         let album = albums[albumId];
         /* console.log("albums", albumId, typeof albumId, albumId);
         alert(album.name + " selected"); */
-        location.href = '../album/view.html?id=' + albumId;
+        location.href = '../Album/View.html?id=' + albumId;
     }
 }
 
@@ -390,7 +390,7 @@
         let artist = artists[artistId];
         /* console.log("artists", artistId, typeof artistId, artists);
         alert(artist.name + " selected"); */
-        location.href = './artist/View.html?id=' + artistId;
+        location.href = './Artist/View.html?id=' + artistId;
     }
 }
 
