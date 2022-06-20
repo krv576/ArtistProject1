@@ -74,18 +74,40 @@
                         onDeleteAlbumClicked();
                     })
                 } else {
-                    if (confirm('Album will be deleted permanantly. Are you sure ..?')) {
-                        deleteAlbum(getAllUrlParams().id, function (res) {
-                            console.log(res);
-                            if (res.error) {
-                                alert(res.data);
-                                history.back();
-                            } else {
-                                alert(res.data.message);
-                                history.back();
+                    getTracks(getAllUrlParams().id, async function (resTracks) {
+                        console.log(resTracks);
+                        if (resTracks.error) {
+                            alert(resTracks.data);
+                            history.back();
+                        } else {
+                            let tracks = resTracks.data;
+                            let alertMessage = 'Album will be deleted permanantly. Are you sure ..?';
+                            if (tracks.length > 0) {
+                                let isPlural = tracks.length !== 1;
+                                alertMessage = `"Selected Album and ${tracks.length}-track${isPlural ? "s" : ""}" will be deleted permanantly. Are you sure ..?`;
                             }
-                        })
-                    }
+                            if (confirm(alertMessage)) {
+                                if (tracks.length > 0) {
+                                    for (let index = 0; index < tracks.length; index++) {
+                                        const track = tracks[index];
+                                        let delTrackRes = await deleteTrack(track.id);
+                                        console.log("delete tracks one by one", delTrackRes);
+                                    }
+                                }
+                                deleteAlbum(getAllUrlParams().id, function (res) {
+                                    console.log(res);
+                                    if (res.error) {
+                                        alert(res.data);
+                                        history.back();
+                                    } else {
+                                        alert(res.data.message);
+                                        history.back();
+                                    }
+                                })
+                            }
+                        }
+
+                    });
                 }
             }
             function onBuyAlbumClicked() {
